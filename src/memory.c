@@ -22,7 +22,11 @@
  */
 #include <stdint.h>
 #include <stdlib.h>
+#include "stats.h"
+#include "course1.h"
+#include "platform.h"
 #include "memory.h"
+#include "data.h"
 
 /***********************************************************
  Function Definitions
@@ -51,14 +55,12 @@ void clear_all(char * ptr, unsigned int size){
 }
 
 uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
-  uint8_t * temp = 0;
+  uint8_t temp[length];
   for (uint8_t i = 0; i < length; i++){
-    *(temp+i) = *src;
-    src++; 
+    temp[i] = *(src+i);
   }
   for (uint8_t i = 0; i < length; i++){
-    *(dst) = *(temp+i);
-    dst++; 
+    *(dst+i) = temp[i];
   }
   return dst;
 }

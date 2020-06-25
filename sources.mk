@@ -17,6 +17,6 @@ SOURCES = ./src/main.c \
 	./src/course1.c \
 
 # Add your include paths to this variable
-INCLUDES = -I./include/common \
-	-I./include/CMSIS \
-	-I./include/msp432 \
+INCLUDES = -I./include/common/ \
+	-I./include/CMSIS/ \
+	-I./include/msp432/ \

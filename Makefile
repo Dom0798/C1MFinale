@@ -27,6 +27,7 @@
 #
 # Function Overrride:
 #	FUNCTION = (COURSE1)
+
 # Debug Overrride:
 #	DEBUG = (VERBOSE)
 #------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ endif
 
 # Architectures Specific Flags
 #------------------------------------------------------------------------------
-LINKER_FILE = ../msp432p401r.lds
+LINKER_FILE = msp432p401r.lds
 CPU = cortex-m4
 ARCH = armv7e-m
 SPECS = nosys.specs
@@ -65,17 +66,17 @@ ABI = hard
 #------------------------------------------------------------------------------
 ifeq ($(PLATFORM), MSP432)
 	CC = arm-none-eabi-gcc
-	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map -T$(LINKER_FILE) -D$(PLATFORM)
+	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map -T$(LINKER_FILE)
 else
 	CC = gcc
-	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map -D$(PLATFORM)
+	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map
 endif
 LD = arm-none-eabi-ld
 CFLAGS = -mcpu=$(CPU) -march=$(ARCH) -m$(STATE) -mfloat-abi=$(ABI) -mfpu=$(FPU) --specs=$(SPECS)
 
 #Target and file conversions
 #------------------------------------------------------------------------------
-TARGET = c1m2
+TARGET = c1m4
 OBJS = $(SOURCES:.c=.o)
 LIBS = $(INCLUDES)
 DEPS = $(SOURCES:.c=.d)
@@ -104,7 +105,8 @@ endif
 ifeq ($(PLATFORM), MSP432)
 	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
 else
-	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(LDFLAGS) -MD -o $@
+	@echo "Compiling $< to $@..."
+	@$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(LDFLAGS) -MD -o $@
 endif
 
 #Build all files
@@ -117,11 +119,21 @@ all: $(TARGET).out
 
 $(TARGET).out: $(OBJS)
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
+	@echo "Using: $(PLATFORM)"
+	@echo "Using: $(FUNCTION)"
+	@echo "Debug: $(DEBUG)"
+	@echo "Building $(OBJS) to $@..."
+	@$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
+	@echo Size of code:
 	arm-none-eabi-size -Btd $@
 else
-	$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
-	size -Btd $@
+	@echo "\nCompiling for: $(PLATFORM)"
+	@echo "Using: $(FUNCTION)"
+	@echo "Debug: $(DEBUG)"
+	@echo "Building $(OBJS) to $@..."
+	@$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
+	@echo "\nSize of code:"
+	@size -Btd $@
 endif
 
 #Compile all files
@@ -143,6 +155,6 @@ endif
 #------------------------------------------------------------------------------
 .PHONY: clean
 clean:
-	@rm -f $(OBJS) $(DEPS) $(PRE) $(ASM) $(TARGET).out $(TARGET).map
-	@echo "\n**All files generated removed**\n"
+	@ rm -f $(OBJS) $(TARGET).map $(TARGET).out $(DEPS) $(PRE) $(ASM) ./src/*.out ./src/*.map
+	@echo "\n***All files generated removed***\n"
 	

@@ -21,85 +21,70 @@
  
 #include "stats.h"
 #include <math.h>
+#include "course1.h"
 #include "platform.h"
+#include "memory.h"
+#include "data.h"
 
 /* Size of the Data Set */
 #define SIZE (40)
 
-/*void main() {
-
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114,  88,  45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-
-  sort_array(test, SIZE);
-  print_array(test,SIZE);
-  print_statistics(test, SIZE);
-
-}*/
-
 /*Implementation File Code Here */
-void sort_array(unsigned char *array, char lenght){
-  unsigned char act = 0;
-  for (int j=0; j < lenght; j++){
-    for (int i = 0; i < lenght; i++){
-      if (array[i] < array[i + 1]){
+void sort_array(unsigned char *array, char length){
+  int act = 0;
+  for (int j=0; j < length; j++){
+    for (int i = j; i < length; i++){
+      if (array[j] < array[i]){
         act = array[i];
-        array[i] = array[i + 1];
-        array[i +1] = act;
+        array[i] = array[j];
+        array[j] = act;
       }
     }  
   }
   return;
 }
 
-void print_array(unsigned char *array, char lenght){
-  #if defined (VERBOSE)  
-    for (int i = 0; i < lenght; i++){
-      if ((i == 7)|(i == 14)|(i == 21)|(i == 28)|(i == 39)){
-        return PRINTF("Element %d: %d\n", i, array[i]);
-      }
-      else return PRINTF("Element %d: %d  ", i, array[i]); 
-    }
+void print_array(unsigned char *array, char length){
+  #ifdef VERBOSE  
+  for (int i = 0; i < length; i++){
+    PRINTF(" %d ", array[i]); 
+  }
   #endif
   return;
 }
 
-unsigned char find_median(unsigned char *array, char lenght){
-  if (SIZE % 2 == 0){
-    return array[SIZE/2];
+unsigned char find_median(unsigned char *array, char length){
+  if (length % 2 == 0){
+    return array[length/2];
   }
   else{
-    unsigned char x = ceil(SIZE/2);
-    unsigned char y = floor(SIZE/2);
-    return (unsigned char) (array[x]+array[y])/2;
+    unsigned char x = ceil(length/2);
+    unsigned char y = floor(length/2);
+    return (array[x]+array[y])/2;
   }
 }
 
-unsigned char find_maximum(unsigned char *array, char lenght){
+unsigned char find_maximum(unsigned char *array, char length){
   return array[0];
 }
 
-unsigned char find_minimum(unsigned char *array, char lenght){
-  return array[SIZE-1];
+unsigned char find_minimum(unsigned char *array, char length){
+  return array[length-1];
 }
 
-unsigned char find_mean(unsigned char *array, char lenght){
-  unsigned char sum = 0;
-  for (int i = 0; i < lenght; i++){
+unsigned char find_mean(unsigned char *array, char length){
+  int sum = 0;
+  for (int i = 0; i < length; i++){
     sum += array[i];
   }
-  return (unsigned char) sum/(SIZE-1);
+  return sum/(length);
 }
-
-void print_statistics(unsigned char *array, char lenght){
+void print_statistics(unsigned char *array, char length){
   PRINTF("\nArray Statistics:\n");
-  PRINTF("Median: %d\n", find_median(array, lenght));
-  PRINTF("Max: %d\n", find_maximum(array, lenght));
-  PRINTF("Min: %d\n", find_minimum(array, lenght));
-  PRINTF("Mean: %d\n", find_mean(array, lenght));
+  PRINTF("Median: %d\n", find_median(array, length));
+  PRINTF("Max: %d\n", find_maximum(array, length));
+  PRINTF("Min: %d\n", find_minimum(array, length));
+  PRINTF("Mean: %d\n", find_mean(array, length));
   return;
 }
 

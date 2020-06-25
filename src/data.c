@@ -10,6 +10,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "stats.h"
+#include "course1.h"
+#include "platform.h"
+#include "memory.h"
 #include "data.h"
 
 uint8_t my_itoa(int32_t data, uint8_t * ptr, uint32_t base){

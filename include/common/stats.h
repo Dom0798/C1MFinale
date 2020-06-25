@@ -31,7 +31,7 @@
  *
  * @return no return
  */
- void sort_array(unsigned char *array, char lenght);
+ void sort_array(unsigned char *array, char length);
  
  /**
  * @brief Print the array
@@ -43,7 +43,7 @@
  *
  * @return no return
  */
- void print_array(unsigned char *array, char lenght);
+ void print_array(unsigned char *array, char length);
  
  /**
  * @brief Find median
@@ -55,7 +55,7 @@
  *
  * @return element in the index of the median; if there are two elements, the mean of those
  */
- unsigned char find_median(unsigned char *array, char lenght);
+ unsigned char find_median(unsigned char *array, char length);
  
  /**
  * @brief Find maximum
@@ -67,7 +67,7 @@
  *
  * @return return the biggest element
  */
- unsigned char find_maximum(unsigned char *array, char lenght);
+ unsigned char find_maximum(unsigned char *array, char length);
  
  /**
  * @brief Find minimum
@@ -79,7 +79,7 @@
  *
  * @return return the smallest element
  */
- unsigned char find_minimum(unsigned char *array, char lenght);
+ unsigned char find_minimum(unsigned char *array, char length);
  
  /**
  * @brief Find mean
@@ -91,7 +91,7 @@
  *
  * @return return mean value
  */
- unsigned char find_mean(unsigned char *array, char lenght);
+ unsigned char find_mean(unsigned char *array, char length);
 
  /**
  * @brief Print statistics
@@ -103,7 +103,7 @@
  *
  * @return no return
  */
- void print_statistics(unsigned char *array, char lenght);
+ void print_statistics(unsigned char *array, char length);
 
 #endif /* __STATS_H__ */
 

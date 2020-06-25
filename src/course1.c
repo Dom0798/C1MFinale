@@ -18,11 +18,11 @@
  */
 
 #include <stdint.h>
+#include "stats.h"
 #include "course1.h"
 #include "platform.h"
 #include "memory.h"
 #include "data.h"
-#include "stats.h"
 #define BASE_2 (2)
 #define BASE_10 (10)
 #define BASE_16 (16)
@@ -62,7 +62,7 @@ int8_t test_data2() {
   uint32_t digits;
   int32_t value;
 
-  PRINTF("test_data2():\n");
+  PRINTF("\ntest_data2():\n");
   ptr = (uint8_t*) reserve_words( DATA_SET_SIZE_W );
 
   if (! ptr )
@@ -92,7 +92,7 @@ int8_t test_memmove1() {
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memmove1() - NO OVERLAP\n");
+  PRINTF("\ntest_memmove1() - NO OVERLAP\n");
   set = (uint8_t*) reserve_words( MEM_SET_SIZE_W );
 
   if (! set ) 
@@ -132,7 +132,7 @@ int8_t test_memmove2() {
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memmove2() -OVERLAP END OF SRC BEGINNING OF DST\n");
+  PRINTF("\ntest_memmove2() -OVERLAP END OF SRC BEGINNING OF DST\n");
   set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
 
   if (! set )
@@ -170,7 +170,7 @@ int8_t test_memmove3() {
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memove3() - OVERLAP END OF DEST BEGINNING OF SRC\n");
+  PRINTF("\ntest_memove3() - OVERLAP END OF DEST BEGINNING OF SRC\n");
   set = (uint8_t*)reserve_words( MEM_SET_SIZE_W);
 
   if (! set ) 
@@ -211,7 +211,7 @@ int8_t test_memcopy() {
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memcopy()\n");
+  PRINTF("\ntest_memcopy()\n");
   set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
 
   if (! set ) 
@@ -250,7 +250,7 @@ int8_t test_memset()
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memset()\n");
+  PRINTF("\ntest_memset()\n");
   set = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
   if (! set )
   {
@@ -299,7 +299,7 @@ int8_t test_reverse()
                                  0x20, 0x24, 0x7C, 0x20, 0x24, 0x69, 0x68, 0x54
                                };
 
-  PRINTF("test_reverse()\n");
+  PRINTF("\ntest_reverse()\n");
   copy = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
   if (! copy )
   {
@@ -342,6 +342,7 @@ void course1(void)
   for ( i = 0; i < TESTCOUNT; i++) 
   {
     failed += results[i];
+    PRINTF("%d",results[i]);
   }
 
   PRINTF("--------------------------------\n");
