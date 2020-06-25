@@ -21,7 +21,6 @@
  */
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
-
 /**
  * @brief Sets a value of a data array 
  *
@@ -89,5 +88,90 @@ void set_all(char * ptr, char value, unsigned int size);
  * @return void.
  */
 void clear_all(char * ptr, unsigned int size);
+
+/**
+ * @brief Moves bytes of data
+ *
+ * The src data, that fits in length, will be moved to dst. Cares about overlapping.
+ *
+ * @param src Pointer to source
+ * @param dst Pointer to destination
+ * @param lenght Number of bytes
+ *
+ * @return pointer to dst
+ */
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length);
+
+/**
+ * @brief Copies bytes of data
+ *
+ * The src data, that fits in lenght, will be copied to dst. Does not care about overlapping.
+ *
+ * @param src Pointer to source
+ * @param dst Pointer to destination
+ * @param lenght Number of bytes
+ *
+ * @return pointer to dst
+ */
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length);
+
+/**
+ * @brief Set values of memory location
+ *
+ * The value should be set to all the location within the lenght
+ *
+ * @param src Pointer to source
+ * @param lenght Number of bytes
+ * @param value Value to set
+ *
+ * @return pointer to src
+ */
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value);
+
+/**
+ * @brief Set values of memory location to zero
+ *
+ * Zero out all the memory locations
+ *
+ * @param src Pointer to source
+ * @param lenght Number of bytes
+ *
+ * @return pointer to src
+ */
+uint8_t * my_memzero(uint8_t * src, size_t length);
+
+/**
+ * @brief Reverse the memory location
+ *
+ * Reverse the order of all bytes at memory location
+ *
+ * @param src Pointer to source
+ * @param lenght Number of bytes
+ *
+ * @return pointer to src
+ */
+uint8_t * my_reverse(uint8_t * src, size_t length);
+
+/**
+ * @brief Allocate in dynamic memory
+ *
+ * Given a number of words, it allocates them in dynamic memory
+ *
+ * @param lenght Number of words
+ *
+ * @return pointer to memory if succesful, null if not
+ */
+int32_t * reserve_words(size_t length);
+
+/**
+ * @brief Free dynamic memory allocation
+ *
+ * Frees space in dynamic memory of a previous allocation
+ *
+ * @param src Pointer to source
+ *
+ * @return none
+ */
+void free_words(int32_t * src);
 
 #endif /* __MEMORY_H__ */

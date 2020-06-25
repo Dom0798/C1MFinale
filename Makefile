@@ -12,7 +12,7 @@
 #------------------------------------------------------------------------------
 # Simple makefile for HOST and MSP432 microcontroller
 #
-# Use: make [TARGET] [PLATFORM-OVERRIDES]
+# Use: make [TARGET] [PLATFORM-OVERRIDES] [FUNCTION-OVERRIDE] [DEBUG-OVERRIDE]
 #
 # Build Targets:
 #      <FILE>.o - Builds <FILE>.o object file
@@ -25,16 +25,30 @@
 # Platform Overrides:
 #      PLATFORM = Platform where it is going to compile (HOST, MSP432)
 #
+# Function Overrride:
+#	FUNCTION = (COURSE1)
+# Debug Overrride:
+#	DEBUG = (VERBOSE)
 #------------------------------------------------------------------------------
 include sources.mk
 
+#DEBUG Override
+ifeq ($(DEBUG), VERBOSE)
+	DF = -D$(DEBUG)
+endif
+
+#Function Override
+FUNCTION = 
+ifeq ($(FUNCTION), COURSE1)
+	CF = -D$(FUNCTION) 
+endif
+
 # Platform Overrides
 #------------------------------------------------------------------------------
-PLATFORM = MSP432
 ifeq ($(PLATFORM), MSP432)
-	PF = -DMSP432
-else
-	PF = -DHOST
+	PF = -D$(PLATFORM)
+else ifeq ($(PLATFORM), HOST)
+	PF = -D$(PLATFORM)
 endif
 
 # Architectures Specific Flags
@@ -72,25 +86,25 @@ ASM = $(SOURCES:.c=.asm)
 #------------------------------------------------------------------------------
 %.i : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) -E $< $(CFLAGS) $(LIBS) $(PF) $(LDFLAGS) -MD -o $@
+	$(CC) -E $< $(CFLAGS) $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
 else
-	$(CC) -E $< $(LIBS) $(PF) $(LDFLAGS) -MD -o $@
+	$(CC) -E $< $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
 endif
 
 %.asm : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(LIBS) $(PF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
+	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
 	arm-none-eabi-objdump -S $@
 else
-	$(CC) $(LIBS) -c $(PF) $< $(LDFLAGS) -MD -o $@
+	$(CC) $(LIBS) -c $(PF) $(DF) $(CF) $< $(LDFLAGS) -MD -o $@
 	objdump -S $@
 endif
 
 %.o : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(LIBS) $(PF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
+	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
 else
-	$(CC) $(LIBS) $(PF) -c $< $(LDFLAGS) -MD -o $@
+	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(LDFLAGS) -MD -o $@
 endif
 
 #Build all files
@@ -103,10 +117,10 @@ all: $(TARGET).out
 
 $(TARGET).out: $(OBJS)
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(OBJS) $(PF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
+	$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
 	arm-none-eabi-size -Btd $@
 else
-	$(CC) $(OBJS) $(PF) $(LIBS) $(LDFLAGS) -o $@
+	$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
 	size -Btd $@
 endif
 
@@ -120,14 +134,15 @@ call: $(TARGET)c.out
 
 $(TARGET)c.out: $(OBJS)
 ifeq ($(PLATFORM), MSP432)
-	$(CC) -c $(OBJS) $(PF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
+	$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
 else
-	$(CC) -c $(OBJS) $(PF) $(LIBS) $(LDFLAGS) -o $@
+	$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
 endif
 
 #Remove generated files
 #------------------------------------------------------------------------------
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(DEPS) $(PRE) $(ASM) $(TARGET).out $(TARGET).map
+	@rm -f $(OBJS) $(DEPS) $(PRE) $(ASM) $(TARGET).out $(TARGET).map
+	@echo "\n**All files generated removed**\n"
 	

@@ -31,7 +31,7 @@
  *
  * @return no return
  */
-unsigned char sort_array(unsigned char *array, char lenght);
+ void sort_array(unsigned char *array, char lenght);
  
  /**
  * @brief Print the array
@@ -43,7 +43,7 @@ unsigned char sort_array(unsigned char *array, char lenght);
  *
  * @return no return
  */
-unsigned char print_array(unsigned char *array, char lenght);
+ void print_array(unsigned char *array, char lenght);
  
  /**
  * @brief Find median
@@ -103,7 +103,7 @@ unsigned char print_array(unsigned char *array, char lenght);
  *
  * @return no return
  */
- unsigned char print_statistics(unsigned char *array, char lenght);
+ void print_statistics(unsigned char *array, char lenght);
 
 #endif /* __STATS_H__ */
 

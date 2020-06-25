@@ -20,6 +20,8 @@
  * @date April 1 2017
  *
  */
+#include <stdint.h>
+#include <stdlib.h>
 #include "memory.h"
 
 /***********************************************************
@@ -46,5 +48,69 @@ void set_all(char * ptr, char value, unsigned int size){
 
 void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
+}
+
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
+  uint8_t * temp = 0;
+  for (uint8_t i = 0; i < length; i++){
+    *(temp+i) = *src;
+    src++; 
+  }
+  for (uint8_t i = 0; i < length; i++){
+    *(dst) = *(temp+i);
+    dst++; 
+  }
+  return dst;
+}
+
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length){
+  for (uint8_t i = 0; i < length; i++){
+    *(dst+i) = *(src+i); 
+  }
+  return dst;
+}
+
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value){
+  for (uint8_t i = 0; i < length; i++){
+    * src = value;
+    src++;
+  }
+  return src;
+}
+
+uint8_t * my_memzero(uint8_t * src, size_t length){
+  for (uint8_t i = 0; i < length; i++){
+    * src = 0;
+    src++;
+  }
+  return src;
+}
+
+uint8_t * my_reverse(uint8_t * src, size_t length){
+  uint8_t tog[length];
+  src = &tog[0];
+  for (uint8_t i = 0; i < length; i++){
+    *(tog+i) = *(src);
+    src++;
+  }
+  src = &tog[length-1];
+  for (uint8_t i = 0; i < length; i++){
+    *(src) = *(tog+i);
+    src--;
+  }
+  return src;
+}
+
+int32_t * reserve_words(size_t length){
+  int32_t * mem;
+  mem = (int32_t *)malloc(length * sizeof(int32_t));
+  if (mem != NULL) {
+  return mem;
+  }
+  else return NULL;
+}
+
+void free_words(int32_t * src){
+  free(src);
 }
 

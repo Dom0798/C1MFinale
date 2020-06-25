@@ -20,18 +20,26 @@
  * @date April 1 2017
  *
  */
+#include <stdint.h>
+#include <stdlib.h>
 #include "platform.h"
 #include "memory.h"
+#include "course1.h"
 
 #define MAX_LENGTH (10)
 char buffer[MAX_LENGTH];
 
 /* A pretty boring main file */
 int main(void) {
-  unsigned int i;
+
+  #if defined (COURSE1)
+    course1();
+  #endif
+
+/*  unsigned int i;
   char value;
 
-  /* Code below does some arbitrary memory Reads & writes */
+   Code below does some arbitrary memory Reads & writes *
   clear_all(buffer, MAX_LENGTH);
   set_all( ( buffer + 8 ), 43, 2); 
   set_value(buffer, 0, 0x61);
@@ -50,5 +58,6 @@ int main(void) {
   }
   PRINTF("\n");
   return 0;
+*/
 }
 
