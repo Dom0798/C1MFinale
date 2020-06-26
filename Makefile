@@ -15,9 +15,9 @@
 # Use: make [TARGET] [PLATFORM-OVERRIDES] [FUNCTION-OVERRIDE] [DEBUG-OVERRIDE]
 #
 # Build Targets:
-#      <FILE>.o - Builds <FILE>.o object file
-#      <FILE>.i - Builds <FILE>.i preprocessed file
-#      <FILE>.asm - Builds <FILE>.asm assembly file
+#      scr/<FILE>.o - Builds <FILE>.o object file
+#      scr/<FILE>.i - Builds <FILE>.i preprocessed file
+#      scr/<FILE>.asm - Builds <FILE>.asm assembly file
 #      build - Builds and links all source files
 #      compile-all - Compiles all the source files
 #      clean - removes all generated files
@@ -67,7 +67,7 @@ ABI = hard
 ifeq ($(PLATFORM), MSP432)
 	CC = arm-none-eabi-gcc
 	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map -T$(LINKER_FILE)
-else
+else ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LDFLAGS = -Wall -Werror -g -O0 -std=c99 -Wl,-Map=$(TARGET).map
 endif
@@ -87,24 +87,35 @@ ASM = $(SOURCES:.c=.asm)
 #------------------------------------------------------------------------------
 %.i : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) -E $< $(CFLAGS) $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
-else
-	$(CC) -E $< $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
+	@echo "Building $< to $@..."
+	@$(CC) -E $< $(CFLAGS) $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
+	@echo "\nDone!"
+else ifeq ($(PLATFORM), HOST)
+	@echo "Building $< to $@..."
+	@$(CC) -E $< $(LIBS) $(PF) $(DF) $(CF) $(LDFLAGS) -MD -o $@
+	@echo "\nDone!"
 endif
 
 %.asm : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
-	arm-none-eabi-objdump -S $@
-else
-	$(CC) $(LIBS) -c $(PF) $(DF) $(CF) $< $(LDFLAGS) -MD -o $@
-	objdump -S $@
+	@echo "Building $< to $@..."
+	@$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
+	@echo "\nDone!"
+	@echo "\nAssembly:"
+	@arm-none-eabi-objdump -S $@
+else ifeq ($(PLATFORM), HOST)
+	@echo "Building $< to $@..."
+	@$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(LDFLAGS) -MD -o $@
+	@echo "\nDone!"
+	@echo "\nAssembly:"
+	@objdump -S $@
 endif
 
 %.o : %.c
 ifeq ($(PLATFORM), MSP432)
-	$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
-else
+	@echo "Compiling $< to $@..."
+	@$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(CFLAGS) $(LDFLAGS) -MD -o $@
+else ifeq ($(PLATFORM), HOST)
 	@echo "Compiling $< to $@..."
 	@$(CC) $(LIBS) $(PF) $(DF) $(CF) -c $< $(LDFLAGS) -MD -o $@
 endif
@@ -124,14 +135,16 @@ ifeq ($(PLATFORM), MSP432)
 	@echo "Debug: $(DEBUG)"
 	@echo "Building $(OBJS) to $@..."
 	@$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
-	@echo Size of code:
-	arm-none-eabi-size -Btd $@
-else
+	@echo "\nDone!"
+	@echo "\nSize of code:"
+	@arm-none-eabi-size -Btd $@
+else ifeq ($(PLATFORM), HOST)
 	@echo "\nCompiling for: $(PLATFORM)"
 	@echo "Using: $(FUNCTION)"
 	@echo "Debug: $(DEBUG)"
 	@echo "Building $(OBJS) to $@..."
 	@$(CC) $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
+	@echo "\nDone!"
 	@echo "\nSize of code:"
 	@size -Btd $@
 endif
@@ -146,9 +159,17 @@ call: $(TARGET)c.out
 
 $(TARGET)c.out: $(OBJS)
 ifeq ($(PLATFORM), MSP432)
-	$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
-else
-	$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
+	@echo "\nCompiling for: $(PLATFORM)"
+	@echo "Using: $(FUNCTION)"
+	@echo "Debug: $(DEBUG)"
+	@$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(CFLAGS) $(LDFLAGS) -o $@
+	@echo "\nDone!"
+else ifeq ($(PLATFORM), HOST)
+	@echo "\nCompiling for: $(PLATFORM)"
+	@echo "Using: $(FUNCTION)"
+	@echo "Debug: $(DEBUG)"
+	@$(CC) -c $(OBJS) $(PF) $(DF) $(CF) $(LIBS) $(LDFLAGS) -o $@
+	@echo "\nDone!"
 endif
 
 #Remove generated files
@@ -156,5 +177,5 @@ endif
 .PHONY: clean
 clean:
 	@ rm -f $(OBJS) $(TARGET).map $(TARGET).out $(DEPS) $(PRE) $(ASM) ./src/*.out ./src/*.map
-	@echo "\n***All files generated removed***\n"
+	@echo "\n           ***All files generated removed***\n"
 	

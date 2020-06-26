@@ -342,9 +342,9 @@ void course1(void)
   for ( i = 0; i < TESTCOUNT; i++) 
   {
     failed += results[i];
-    PRINTF("%d",results[i]);
   }
 
+  PRINTF("\n");
   PRINTF("--------------------------------\n");
   PRINTF("Test Results:\n");
   PRINTF("  PASSED: %d / %d\n", (TESTCOUNT - failed), TESTCOUNT);

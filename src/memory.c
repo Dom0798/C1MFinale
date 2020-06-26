@@ -56,11 +56,11 @@ void clear_all(char * ptr, unsigned int size){
 
 uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
   uint8_t temp[length];
-  for (uint8_t i = 0; i < length; i++){
-    temp[i] = *(src+i);
+  for (unsigned int i = 0; i < length; i++){
+    *(temp+i) = *(src+i);
   }
-  for (uint8_t i = 0; i < length; i++){
-    *(dst+i) = temp[i];
+  for (unsigned int i = 0; i < length; i++){
+    *(dst+i) = *(temp+i);
   }
   return dst;
 }
@@ -73,7 +73,7 @@ uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length){
 }
 
 uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value){
-  for (uint8_t i = 0; i < length; i++){
+  for (unsigned int i = 0; i < length; i++){
     * src = value;
     src++;
   }
@@ -81,7 +81,7 @@ uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value){
 }
 
 uint8_t * my_memzero(uint8_t * src, size_t length){
-  for (uint8_t i = 0; i < length; i++){
+  for (unsigned int i = 0; i < length; i++){
     * src = 0;
     src++;
   }
@@ -90,15 +90,11 @@ uint8_t * my_memzero(uint8_t * src, size_t length){
 
 uint8_t * my_reverse(uint8_t * src, size_t length){
   uint8_t tog[length];
-  src = &tog[0];
-  for (uint8_t i = 0; i < length; i++){
-    *(tog+i) = *(src);
-    src++;
+  for (int i = 0; i < length; i++){
+    *(tog+i) = *(src+i);
   }
-  src = &tog[length-1];
-  for (uint8_t i = 0; i < length; i++){
-    *(src) = *(tog+i);
-    src--;
+  for (int i = 0; i < length; i++){
+    *(src+length-1-i) = *(tog+i);
   }
   return src;
 }
